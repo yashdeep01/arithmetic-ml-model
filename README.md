@@ -9,8 +9,8 @@ A *really* simple machine learning model to grasp all major steps that make up a
 > It's advised to create a `conda` environment before running the code. Install the anaconda package from [here](https://docs.anaconda.com/anaconda/install/) and follow these commands:
 ```
 conda init
-conda create -n arithmetic-ml python=3.8
-conda activate arithmetic-ml
+conda create -n arithmetic-ml-pytorch python=3.8
+conda activate arithmetic-ml-pytorch
 ```
 
 Run the following commands on terminal to set up the repo locally on your machine:
@@ -44,7 +44,6 @@ The pipeline here consists of following steps:
     - Arithmetic operation to perform with ML
     - Operand (constant) to perform operation with
     - Hyperparameters, namely initial weight, learning rate, train-test ratio, and number of epochs.
-**Training**
 2. Forward propagation
     - Compute the result of arithmetic operation of training set with given weight(s)
 3. Loss computation

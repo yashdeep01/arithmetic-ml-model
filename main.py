@@ -4,6 +4,7 @@
 Command line interface for elementary arithmetic operations using ML
 """
 
+import torch
 import argparse
 import numpy as np
 import math
@@ -38,6 +39,10 @@ parser.add_argument('-e', '--epochs',
                     type=int,
                     default=15,
                     help='Set number of epochs')
+parser.add_argument('--step',
+                    type=int,
+                    default=1,
+                    help='Print every \'skip\'th epoch')
 parser.add_argument('-t', '--test_size',
                     type=float,
                     default=0.2,
@@ -55,14 +60,12 @@ class MachineLearningModel:
     """
     # TODO: Allow other operations like division, squaring, sq. root, etc.
 
-    X_train, X_test, y_train, y_test = [], [], [], []
-
     def __init__(self, X, Y):
         self.X = X
         self.Y = Y
         self.model_name = args.model
         self.learning_rate = args.lr
-        self.weight = args.weight
+        self.weight = torch.tensor(args.weight, dtype=torch.float32, requires_grad=True)
         self.n_epochs = args.epochs
         self.test_size = args.test_size
         self.loss = None
@@ -103,16 +106,16 @@ class MachineLearningModel:
 
     def compute_loss(self, y_pred, y):
         """
-        Computes loss in the form of SME
+        Computes loss in the form of MSE
         :param y_pred: predicted values from the model
         :param y: ground truth values of the arithmetic operation
         :return: None
         """
-        self.loss = np.square((y_pred - y)).mean()
+        self.loss = ((y_pred - y)**2).mean()
 
     def backprop(self, X, Y):
         """
-        Computes gradient manually using chain rule
+        Computes gradient manually using chain rule, redundant with pytorch.
         :param X: Training data points
         :param Y: Training labels (Ground truth)
         :return dw: Gradient
@@ -134,7 +137,10 @@ class MachineLearningModel:
         :return:
         """
         # TODO: Apply SGD and optimizer (Adam)
-        self.weight -= self.learning_rate * dw
+        # We do not want this operation to be part of our computation graph for grad calculation
+        # Hence, omitting grad calculation.
+        with torch.no_grad():
+            self.weight -= self.learning_rate * dw
 
     def train(self):
         """
@@ -155,10 +161,16 @@ class MachineLearningModel:
                 break
 
             self.compute_loss(y_pred, self.y_train)
-            dw = self.backprop(self.X_train, self.y_train)
-            self.gradient_descent(dw)
+            # dw = self.backprop(self.X_train, self.y_train) # manual computation
 
-            if epoch % 1 == 0:
+            # pytorch computes grad
+            self.loss.backward()
+            dw = self.weight.grad
+            self.gradient_descent(dw)
+            # Making gradients zero so as to prevent old values in grad calculation
+            dw.zero_()
+
+            if epoch % args.step == 0:
                 print(f"\tEpo {epoch + 1}\t: weight = {self.weight:.5f}, loss = {math.sqrt(self.loss):.8f}")
         print("\n*******************************************************")
 
@@ -183,7 +195,7 @@ def main():
     # TODO: Allow arithmetic operations between arrays, instead of constant and array
 
     # Input data
-    X = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], dtype=np.float32)
+    X = torch.tensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], dtype=torch.float32)
 
     # Generating labels (ground truth)
     if args.model == 'mul':
@@ -193,7 +205,6 @@ def main():
     elif args.model == 'sub':
         Y = X - args.operand
     else:
-        # TODO: Exception handling
         print(f"Error: \'{args.model}\' operation does not exist!")
         return
     print("-------------------------------------------------------")
