@@ -5,6 +5,7 @@ Command line interface for elementary arithmetic operations using ML
 """
 
 import torch
+import torch.nn as nn
 import argparse
 import numpy as np
 import math
@@ -29,7 +30,7 @@ parser.add_argument('-o', '--operand',
                     help='Set operand to perform operation with')
 parser.add_argument('-l', '--lr',
                     type=float,
-                    default=0.015,
+                    default=0.2212,
                     help='Set learning rate')
 parser.add_argument('-w', '--weight',
                     type=float,
@@ -37,11 +38,11 @@ parser.add_argument('-w', '--weight',
                     help='Set initial weight (operand)')
 parser.add_argument('-e', '--epochs',
                     type=int,
-                    default=15,
+                    default=150,
                     help='Set number of epochs')
 parser.add_argument('--step',
                     type=int,
-                    default=1,
+                    default=10,
                     help='Print every \'skip\'th epoch')
 parser.add_argument('-t', '--test_size',
                     type=float,
@@ -69,6 +70,9 @@ class MachineLearningModel:
         self.n_epochs = args.epochs
         self.test_size = args.test_size
         self.loss = None
+
+        self.loss_fn = nn.MSELoss()
+        self.optimizer = torch.optim.Adam([self.weight], lr=self.learning_rate)
 
         # TODO: Apply n-fold cross-validation
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, Y, test_size=self.test_size,
@@ -132,7 +136,7 @@ class MachineLearningModel:
 
     def gradient_descent(self, dw):
         """
-        Applying non-stochastic gradient descent by updating values of the weight.
+        Applying non-stochastic gradient descent by manually updating values of the weight.
         :param dw: Gradient of loss wrt weight
         :return:
         """
@@ -155,23 +159,31 @@ class MachineLearningModel:
 
         print("*********************** Training ***********************\n")
         for epoch in range(self.n_epochs):
+
+            ### Forward prop
             ret, y_pred = self.forward(self.X_train)
             if ret is False:
                 print(f"Error: 'forward()' returned false.")
                 break
 
-            self.compute_loss(y_pred, self.y_train)
-            # dw = self.backprop(self.X_train, self.y_train) # manual computation
+            ### Compute loss
+            # self.compute_loss(y_pred, self.y_train)         # manual computation
+            self.loss = self.loss_fn(self.y_train, y_pred)
 
-            # pytorch computes grad
+            ### Update weights
+            # dw = self.backprop(self.X_train, self.y_train)  # manual computation
             self.loss.backward()
-            dw = self.weight.grad
-            self.gradient_descent(dw)
-            # Making gradients zero so as to prevent old values in grad calculation
-            dw.zero_()
+            # dw = self.weight.grad
+            # self.gradient_descent(dw)
+            self.optimizer.step()
+
+            ### Making gradients zero so as to prevent old values in grad calculation
+            # dw.zero_()
+            self.optimizer.zero_grad()
 
             if epoch % args.step == 0:
                 print(f"\tEpo {epoch + 1}\t: weight = {self.weight:.5f}, loss = {math.sqrt(self.loss):.8f}")
+
         print("\n*******************************************************")
 
     def test(self):

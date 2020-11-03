@@ -29,7 +29,7 @@ For example, to set operand=2, learning rate=0.018 and number of epochs=20, we c
 ```
 python main.py --operand 2 --lr 0.018 --epochs 20
 ```
-Run this command getting help on command line arguments to set various hyperparameters and other arguments:
+Run this command for getting help on command line arguments to set various hyperparameters and other arguments:
 ```
 python main.py -h
 ```
@@ -49,7 +49,8 @@ The pipeline here consists of following steps:
 3. Loss computation
     - Mean square error (MSE) between label and prediction
 4. Backward propagation
-    - Computing gradient manually using chain rule
+    - <del>Computing gradient manually using chain rule<del>
+    - **pytorch** gradient computation
 5. Gradient descent
-    - Updating weight(s) based on a learning rate
+    - Updating weight(s) based on a learning rate (Adam optimizer)
 
