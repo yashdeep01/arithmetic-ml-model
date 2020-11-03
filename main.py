@@ -1,11 +1,49 @@
+# coding=utf-8
+
+"""
+Command line interface for elementary arithmetic operations using ML
+"""
+
+import argparse
 import numpy as np
 import math
 from sklearn.model_selection import train_test_split
 
-# TODO: Write requirements.txt, README.md
+# Sincere thanks for inspiring: https://github.com/python-engineer/pytorchTutorial
+
 # TODO: Create separate files for each class representing each arithmetic model
 # TODO: Create dump files (pickles) for storing training, testing and results
 # TODO: Try DOCKERFILE to containerize this git repo
+
+parser = argparse.ArgumentParser(allow_abbrev=False,
+                                 description='Arithmetic operation ML model')
+parser.add_argument('-m', '--model',
+                    type=str,
+                    choices=['mul', 'add', 'sub'],
+                    default='mul',
+                    help='Arithmetic operation to perform')
+parser.add_argument('-o', '--operand',
+                    type=float,
+                    default=3.0,
+                    help='Set operand to perform operation with')
+parser.add_argument('-l', '--lr',
+                    type=float,
+                    default=0.015,
+                    help='Set learning rate')
+parser.add_argument('-w', '--weight',
+                    type=float,
+                    default=0.0,
+                    help='Set initial weight (operand)')
+parser.add_argument('-e', '--epochs',
+                    type=int,
+                    default=15,
+                    help='Set number of epochs')
+parser.add_argument('-t', '--test_size',
+                    type=float,
+                    default=0.2,
+                    help='Test ratio')
+
+args = parser.parse_args()
 
 
 class MachineLearningModel:
@@ -19,14 +57,14 @@ class MachineLearningModel:
 
     X_train, X_test, y_train, y_test = [], [], [], []
 
-    def __init__(self, model_name, X, Y, lr=0.016, weight=0.0, n_epochs=20, test_size=0.2):
+    def __init__(self, X, Y):
         self.X = X
         self.Y = Y
-        self.model_name = model_name
-        self.learning_rate = lr
-        self.weight = weight
-        self.n_epochs = n_epochs
-        self.test_size = test_size
+        self.model_name = args.model
+        self.learning_rate = args.lr
+        self.weight = args.weight
+        self.n_epochs = args.epochs
+        self.test_size = args.test_size
         self.loss = None
 
         # TODO: Apply n-fold cross-validation
@@ -54,11 +92,11 @@ class MachineLearningModel:
         :param X: numpy array of train/test data points
         :return:
         """
-        if self.model_name == 'multiplication':
+        if self.model_name == 'mul':
             return True, self.weight * X
-        elif self.model_name == 'addition':
+        elif self.model_name == 'add':
             return True, self.weight + X
-        elif self.model_name == 'subtraction':
+        elif self.model_name == 'sub':
             return True, self.weight + X
         else:
             return False, None
@@ -79,11 +117,11 @@ class MachineLearningModel:
         :param Y: Training labels (Ground truth)
         :return dw: Gradient
         """
-        if self.model_name == 'multiplication':
+        if self.model_name == 'mul':
             dw = np.multiply(2 * X, self.weight * X - Y).mean()
-        elif self.model_name == 'addition':
+        elif self.model_name == 'add':
             dw = 2 * (X + self.weight - Y).mean()
-        elif self.model_name == 'subtraction':
+        elif self.model_name == 'sub':
             dw = 2 * (X - self.weight - Y).mean()
         else:
             dw = None
@@ -92,7 +130,7 @@ class MachineLearningModel:
     def gradient_descent(self, dw):
         """
         Applying non-stochastic gradient descent by updating values of the weight.
-        :param dw:
+        :param dw: Gradient of loss wrt weight
         :return:
         """
         # TODO: Apply SGD and optimizer (Adam)
@@ -125,11 +163,11 @@ class MachineLearningModel:
         print("\n*******************************************************")
 
     def test(self):
-        if self.model_name == 'multiplication':
+        if self.model_name == 'mul':
             y_pred = self.weight * self.X_test
-        elif self.model_name == 'addition':
+        elif self.model_name == 'add':
             y_pred = self.weight + self.X_test
-        elif self.model_name == 'subtraction':
+        elif self.model_name == 'sub':
             y_pred = self.X_test - self.weight
         else:
             y_pred = None
@@ -142,43 +180,38 @@ def main():
     """
     Main logic of the program
     """
-    # TODO: Use argparser to take input from command-line arguments
-
-    operation = 'multiplication'
-    operand = 3
     # TODO: Allow arithmetic operations between arrays, instead of constant and array
 
+    # Input data
     X = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], dtype=np.float32)
 
     # Generating labels (ground truth)
-    if operation == 'multiplication':
-        Y = operand * X
-    elif operation == 'addition':
-        Y = operand + X
-    elif operation == 'subtraction':
-        Y = X - operand
+    if args.model == 'mul':
+        Y = args.operand * X
+    elif args.model == 'add':
+        Y = args.operand + X
+    elif args.model == 'sub':
+        Y = X - args.operand
     else:
         # TODO: Exception handling
-        print(f"Error: \'{operation}\' operation doesn\'t exist!")
+        print(f"Error: \'{args.model}\' operation does not exist!")
         return
     print("-------------------------------------------------------")
-    print(f"Arithmetic operation: {operation}")
-    print(f"Operand: {operand}")
+    print(f"Arithmetic operation: {args.model}")
+    print(f"Operand: {args.operand}")
     print(f"X: {X}")
     print(f"Y: {Y}\n")
 
     # Defining the model, training and testing it.
-    # TODO: Apply multiprocessing to exploit multi-core CPUs
-    model = MachineLearningModel(operation, X, Y, lr=0.015, n_epochs=15)
-    print(f"\nPrediction before training : \n\t{model.weight * model.X_train}\n")
-    model.train()
-    print(f"\nPrediction after training  : \n\t{model.weight * model.X_train}\n")
+    ml_model = MachineLearningModel(X, Y)
+    print(f"\nPrediction before training : \n\t{ml_model.weight * ml_model.X_train}\n")
+    ml_model.train()
+    print(f"\nPrediction after training  : \n\t{ml_model.weight * ml_model.X_train}\n")
     print("=======================================================")
-    model.test()
+    ml_model.test()
     print("=======================================================")
 
 
 # Starting point of execution
 if __name__ == '__main__':
-    # TODO: Create a .yaml or config file to fetch input arguments
     main()
