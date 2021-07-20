@@ -1,58 +1,81 @@
-# Arithmetic ML model
-A *really* simple machine learning model to grasp all major steps that make up a typical ML pipeline. The code here implements simple arithmetic operations on an array of floating numbers, viz multiplication, addition, and subtraction, with a constant operand. Machine learning is actually not required here since these elementary math operations can be implemented directly also, however it's a good way to grasp and appreciate machine learning.
+<h1 align="center">
+    Arithmetic with ✨ Machine Learning ✨
+</h1>
 
-`main` branch consists of manual implementation of the machine learning pipeline with **numpy**.
+<p align="center">
+    A <i>silly</i> use-case of machine learning model. Watch <b>ML</b> ⚡ in <i>action!</i> 
+</p>
+
+
+## 🤔 What is it?
+Implementation of simple arithmetic operations—multiplication, addition, and subtraction—on an array of natural numbers with a single-neuron deep learning network (basically _linear regression!_). 
+
+`main` branch consists of manual implementation of the model with **numpy**.
 
 `pytorch` branch implements the above model using the **pytorch** library.
 
-## Run
-> It's advised to create a `conda` environment before running the code. Install the anaconda package from [here](https://docs.anaconda.com/anaconda/install/) and follow these commands:
-``` bash
-conda init
-conda create -n arithmetic-ml-pytorch python=3.8
-conda activate arithmetic-ml-pytorch
+## 🚀 Open with Streamlit
+Visualise the gradient descent and linear regression happening right in front of you on your browser. Tune the hyperparamters as you watch your model **learn** *live!*
+
+![Demo](./assets/images/streamlit-streamlit_app-2021-07-20-15-07-10.gif)
+
+## 💻 Running with CLI
+### Create conda environment 🐍
+> Install the anaconda package from [here](https://docs.anaconda.com/anaconda/install/) and run these commands on terminal:
 ```
-
-Run the following commands on terminal to set up the repo locally on your machine:
-
-``` zsh
+conda init
+conda create -n arithmetic-ml python=3.8
+conda activate arithmetic-ml
+```
+### Clone this repo 🔗
+```
 git clone https://github.com/yashdeep01/arithmetic-ml-model.git
 cd arithmetic-ml-model/
 pip install -r requirements.txt
 ```
-Simply use this command to run the code:
-~~~ bash
+### Run 🛠️
+```
 python main.py
-~~~
-Note that `main.py` also allows command line arguments to set hyperparameters, arithmetic operators and operands. 
-For example, to set operand=2, learning rate=0.018 and number of epochs=20, we can run:
-``` zsh
+```
+Run with custom hyperparameters:
+```
 python main.py --operand 2 --lr 0.018 --epochs 20
 ```
-Run this command for getting help on command line arguments to set various hyperparameters and other arguments:
-``` zsh
+Get full list of command-line arguments:
+```
 python main.py -h
 ```
 
 ---
 
-## Pipeline
+## ℹ️ About the model
+A single neuron deep learning neural network with identity activation function; in other words, *linear regression*. 
 
-The pipeline here consists of following steps:
-1. Initialising the data, labels and parameters:
-    - Input array of floating point numbers
-    - Arithmetic operation to perform with ML
-    - Operand (constant) to perform operation with
-    - Hyperparameters, namely initial weight, learning rate, train-test ratio, and number of epochs.
-2. Forward propagation
-    - Compute the result of arithmetic operation of training set with given weight(s)
-3. Loss computation
-    - Mean square error (MSE) between label and prediction
-4. Backward propagation
-    - <del>Computing gradient manually using chain rule<del>
-    - **pytorch** gradient computation
-5. Gradient descent
-    - Updating weight(s) based on a learning rate (Adam optimizer)
+**Input** `1,2,3,...,n`  
+**Target** `c,2c,3c,...nc`, *where c is a constant operand*
+
+### ⚙️ Training 
+Steps in each epoch:
+
+1. **Forward propagation** ➡️  
+Computes the standard equation `w*X + b` in forward propagation. Identity activation function.
+
+2. **Loss computation** ⚠️  
+Calculates Mean Squared Error (MSE) loss at the end of the forward propagation.
+
+3. **Back propagation** ⬅️  
+Gradient of loss function with respect to weight `w` and bias `b` obtained: `dw` and `db` respectively.
+
+4. **Gradient descent** 📉  
+Updates weight and bias by stepping against the gradient direction in the magnitude of learning rate `lr`.
+    ```
+    w' = w - lr*dw
+    b' = b - lr*db
+    ```
+Since training dataset is small, batch size is the full training set.
+
+### 🏁 Validation
+Predicts targets for numbers in validation set using the final weight and bias, then reports validation loss.
 
 ---
 
@@ -130,3 +153,6 @@ Test results:
 	Loss  : 0.00006
 =======================================================
 ```
+
+## 📚 Acknowledgement
+Inspired from tutorial: https://github.com/python-engineer/pytorchTutorial
