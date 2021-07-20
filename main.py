@@ -63,6 +63,7 @@ class MachineLearningModel:
         self.model_name = args.model
         self.learning_rate = args.lr
         self.weight = args.weight
+        self.bias = 0.0
         self.n_epochs = args.epochs
         self.test_size = args.test_size
         self.loss = None
@@ -77,6 +78,7 @@ class MachineLearningModel:
         print(f"\tArithmetic model: {self.model_name}")
         print(f"\tLearning rate: {self.learning_rate}")
         print(f"\tInitial weight: {self.weight}")
+        print(f"\tInitial bias: {self.bias}")
         print(f"\tEpochs: {self.n_epochs}")
         print(f"\tTrain-test ratio: {1-self.test_size}-{self.test_size}\n")
 
@@ -92,12 +94,8 @@ class MachineLearningModel:
         :param X: numpy array of train/test data points
         :return:
         """
-        if self.model_name == 'mul':
-            return True, self.weight * X
-        elif self.model_name == 'add':
-            return True, self.weight + X
-        elif self.model_name == 'sub':
-            return True, self.weight + X
+        if self.model_name in ['mul','add','sub']:
+            return True, self.weight * X + self.bias
         else:
             return False, None
 
@@ -117,17 +115,15 @@ class MachineLearningModel:
         :param Y: Training labels (Ground truth)
         :return dw: Gradient
         """
-        if self.model_name == 'mul':
-            dw = np.multiply(2 * X, self.weight * X - Y).mean()
-        elif self.model_name == 'add':
-            dw = 2 * (X + self.weight - Y).mean()
-        elif self.model_name == 'sub':
-            dw = 2 * (X - self.weight - Y).mean()
+        if self.model_name in ['mul','add','sub']:
+            dw = np.multiply(2 * X, self.weight * X + self.bias - Y).mean()
+            db = np.multiply(2, self.weight * X + self.bias - Y).mean()
         else:
             dw = None
-        return dw
+            db = None
+        return dw, db
 
-    def gradient_descent(self, dw):
+    def gradient_descent(self, dw, db):
         """
         Applying non-stochastic gradient descent by updating values of the weight.
         :param dw: Gradient of loss wrt weight
@@ -135,6 +131,7 @@ class MachineLearningModel:
         """
         # TODO: Apply SGD and optimizer (Adam)
         self.weight -= self.learning_rate * dw
+        self.bias -= self.learning_rate * db
 
     def train(self):
         """
@@ -155,25 +152,21 @@ class MachineLearningModel:
                 break
 
             self.compute_loss(y_pred, self.y_train)
-            dw = self.backprop(self.X_train, self.y_train)
-            self.gradient_descent(dw)
+            dw,db = self.backprop(self.X_train, self.y_train)
+            self.gradient_descent(dw,db)
 
             if epoch % 1 == 0:
-                print(f"\tEpo {epoch + 1}\t: weight = {self.weight:.5f}, loss = {math.sqrt(self.loss):.8f}")
+                print(f"\tEpo {epoch + 1}\t: weight = {self.weight:.5f}, MSE loss = {(self.loss):.8f}")
         print("\n*******************************************************")
 
     def test(self):
-        if self.model_name == 'mul':
-            y_pred = self.weight * self.X_test
-        elif self.model_name == 'add':
-            y_pred = self.weight + self.X_test
-        elif self.model_name == 'sub':
-            y_pred = self.X_test - self.weight
+        if self.model_name in ['mul','add','sub']:
+            y_pred = self.weight * self.X_test + self.bias
         else:
             y_pred = None
 
         self.compute_loss(y_pred, self.y_test)
-        print(f"Test results:\n\ty_pred: {y_pred}\n\ty_test: {self.y_test}\n\tLoss  : {math.sqrt(self.loss):.5f}")
+        print(f"Test results:\n\ty_pred: {y_pred}\n\ty_test: {self.y_test}\n\tVal MSE Loss  : {(self.loss):.5f}")
 
 
 def main():
@@ -204,9 +197,9 @@ def main():
 
     # Defining the model, training and testing it.
     ml_model = MachineLearningModel(X, Y)
-    print(f"\nPrediction before training : \n\t{ml_model.weight * ml_model.X_train}\n")
+    print(f"\nPrediction before training : \n\t{ml_model.weight * ml_model.X_train + ml_model.bias}\n")
     ml_model.train()
-    print(f"\nPrediction after training  : \n\t{ml_model.weight * ml_model.X_train}\n")
+    print(f"\nPrediction after training  : \n\t{ml_model.weight * ml_model.X_train + ml_model.bias}\n")
     print("=======================================================")
     ml_model.test()
     print("=======================================================")
