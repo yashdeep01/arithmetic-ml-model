@@ -7,7 +7,7 @@
 </p>
 
 
-## What is it?
+## 🤔 What is it?
 Implementation of simple arithmetic operations—multiplication, addition, and subtraction—on an array of natural numbers with a single-neuron deep learning network (basically _linear regression!_). 
 
 `main` branch consists of manual implementation of the model with **numpy**.
@@ -20,20 +20,20 @@ Visualise the gradient descent and linear regression happening right in front of
 ![Demo](./assets/images/streamlit-streamlit_app-2021-07-20-15-07-10.gif)
 
 ## 💻 Running with CLI
-### Create conda environment
+### Create conda environment 🐍
 > Install the anaconda package from [here](https://docs.anaconda.com/anaconda/install/) and run these commands on terminal:
 ```
 conda init
 conda create -n arithmetic-ml python=3.8
 conda activate arithmetic-ml
 ```
-### Clone this repo
+### Clone this repo 🔗
 ```
 git clone https://github.com/yashdeep01/arithmetic-ml-model.git
 cd arithmetic-ml-model/
 pip install -r requirements.txt
 ```
-### Run
+### Run 🛠️
 ```
 python main.py
 ```
@@ -48,7 +48,7 @@ python main.py -h
 
 ---
 
-## 💭 About the model
+## ℹ️ About the model
 A single neuron deep learning neural network with identity activation function; in other words, *linear regression*. 
 
 **Input** `1,2,3,...,n`  
@@ -57,16 +57,16 @@ A single neuron deep learning neural network with identity activation function; 
 ### ⚙️ Training 
 Steps in each epoch:
 
-1. **Forward propagation**  
+1. **Forward propagation** ➡️ 
 Computes the standard equation `w*X + b` in forward propagation. Identity activation function.
 
-2. **Loss computation**  
+2. **Loss computation** ⚠️ 
 Calculates Mean Squared Error (MSE) loss at the end of the forward propagation.
 
-3. **Back propagation**  
+3. **Back propagation** ⬅️ 
 Gradient of loss function with respect to weight `w` and bias `b` obtained: `dw` and `db` respectively.
 
-4. **Gradient descent**  
+4. **Gradient descent** 📉 
 Updates weight and bias by stepping against the gradient direction in the magnitude of learning rate `lr`.
     ```
     w' = w - lr*dw
