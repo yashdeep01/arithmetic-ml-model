@@ -114,7 +114,6 @@ class MachineLearningModel:
         self.bias -= self.learning_rate * db
 
     def train(self):
-        
         # Training workflow of the arithmetic operation model.
         # In each epoch:
         #     1. Forward propagation: Compute arithmetic operation
@@ -123,8 +122,8 @@ class MachineLearningModel:
         #     4. Gradient descent: Update weight using learning rate
         # TODO: Introduce batch size, optimizer
     
-        progress_bar = st.progress(0)
-        status_text = st.empty()
+        # progress_bar = st.progress(0)
+        # status_text = st.empty()
 
         chart_grad = st.empty() 
         chart_regr = st.empty()
@@ -136,8 +135,8 @@ class MachineLearningModel:
         
         t1 = time.time()
         for epoch in range(self.n_epochs):
-            status_text.text("%i%% Complete" % int(100*(epoch+1)/self.n_epochs))
-            progress_bar.progress(int(100*(epoch+1)/self.n_epochs))
+            # status_text.text("%i%% Complete" % int(100*(epoch+1)/self.n_epochs))
+            # progress_bar.progress(int(100*(epoch+1)/self.n_epochs))
             ret, y_pred = self.forward(self.X_train)
             if ret is False:
                 print(f"Error: 'forward()' returned false.")
@@ -180,7 +179,7 @@ class MachineLearningModel:
                 print(f"\tEpo {epoch + 1}\t: weight = {self.weight:.5f}, loss = {math.sqrt(self.loss):.8f}")
             time.sleep(0.05)
         self.t2 = time.time() - t1
-        progress_bar.empty()
+        # progress_bar.empty()
 
     def test(self):
         ret, y_pred = self.forward(self.X_test)
