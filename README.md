@@ -1,6 +1,9 @@
+<h1 align="center">
+    Arithmetic with ✨ Machine Learning ✨
+</h1>
+
 <p align="center">
-    # Arithmetic with ✨ Machine Learning ✨
-    A *silly* use-case of machine learning model. Watch **ML** ⚡ in _action!_ 
+    A <i>silly</i> use-case of machine learning model. Watch <b>ML</b> ⚡ in <i>action!</i> 
 </p>
 
 
