@@ -3,3 +3,6 @@ scikit-learn
 argparse
 torch
 torchvision
+streamlit
+altair
+pandas
