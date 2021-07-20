@@ -1,5 +1,5 @@
 <h1 align="center">
-    Arithmetic with ✨ Machine Learning ✨
+    Arithmetics with ✨ Machine Learning ✨
 </h1>
 
 <p align="center">
@@ -14,10 +14,10 @@ Implementation of simple arithmetic operations—multiplication, addition, and s
 
 `pytorch` branch implements the above model using the **pytorch** library.
 
-## 🚀 Open with Streamlit
-Visualise the gradient descent and linear regression happening right in front of you on your browser. Tune the hyperparamters as you watch your model **learn** *live!*
+## 🚀 [Open with Streamlit](https://share.streamlit.io/yashdeep01/arithmetic-ml-model/main)
+Visualise the gradient descent and linear regression happening right in front of you on your browser. Tune the hyperparamters as you watch your model **learn** *live!* 
 
-![Demo](./assets/images/streamlit-streamlit_app-2021-07-20-15-07-10.gif)
+[![Demo](./assets/images/streamlit-streamlit_app-2021-07-20-15-07-10.gif)](https://share.streamlit.io/yashdeep01/arithmetic-ml-model/main)
 
 ## 💻 Running with CLI
 ### Create conda environment 🐍
