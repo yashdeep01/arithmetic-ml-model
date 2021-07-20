@@ -57,16 +57,16 @@ A single neuron deep learning neural network with identity activation function; 
 ### ⚙️ Training 
 Steps in each epoch:
 
-1. **Forward propagation** ➡️ 
+1. **Forward propagation** ➡️  
 Computes the standard equation `w*X + b` in forward propagation. Identity activation function.
 
-2. **Loss computation** ⚠️ 
+2. **Loss computation** ⚠️  
 Calculates Mean Squared Error (MSE) loss at the end of the forward propagation.
 
-3. **Back propagation** ⬅️ 
+3. **Back propagation** ⬅️  
 Gradient of loss function with respect to weight `w` and bias `b` obtained: `dw` and `db` respectively.
 
-4. **Gradient descent** 📉 
+4. **Gradient descent** 📉  
 Updates weight and bias by stepping against the gradient direction in the magnitude of learning rate `lr`.
     ```
     w' = w - lr*dw
