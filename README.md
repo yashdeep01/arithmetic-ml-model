@@ -1,19 +1,22 @@
-# Arithmetic ML model
-A *silly* use-case of machine learning model to watch ML in action. 
+<p align="center">
+    # Arithmetic with ✨ Machine Learning ✨
+    A *silly* use-case of machine learning model. Watch **ML** ⚡ in _action!_ 
+</p>
+
 
 ## What is it?
-Implementation of simple arithmetic operations—multiplication, addition, and subtraction—on an array of natural numbers with a single-neuron deep learning network (basically linear regression!). 
+Implementation of simple arithmetic operations—multiplication, addition, and subtraction—on an array of natural numbers with a single-neuron deep learning network (basically _linear regression!_). 
 
 `main` branch consists of manual implementation of the model with **numpy**.
 
 `pytorch` branch implements the above model using the **pytorch** library.
 
-## Open with Streamlit
-Visualise the gradient descent and linear regression on your browser. Tune the hyperparamters as you watch your model **learn** *live!*
+## 🚀 Open with Streamlit
+Visualise the gradient descent and linear regression happening right in front of you on your browser. Tune the hyperparamters as you watch your model **learn** *live!*
 
 ![Demo](./assets/images/streamlit-streamlit_app-2021-07-20-15-07-10.gif)
 
-## Running with CLI
+## 💻 Running with CLI
 ### Create conda environment
 > Install the anaconda package from [here](https://docs.anaconda.com/anaconda/install/) and run these commands on terminal:
 ```
@@ -42,13 +45,13 @@ python main.py -h
 
 ---
 
-## About the model
+## 💭 About the model
 A single neuron deep learning neural network with identity activation function; in other words, *linear regression*. 
 
 **Input** `1,2,3,...,n`  
 **Target** `c,2c,3c,...nc`, *where c is a constant operand*
 
-### Training 
+### ⚙️ Training 
 Steps in each epoch:
 
 1. **Forward propagation**  
@@ -68,6 +71,8 @@ Updates weight and bias by stepping against the gradient direction in the magnit
     ```
 Since training dataset is small, batch size is the full training set.
 
-### Validation
+### 🏁 Validation
 Predicts targets for numbers in validation set using the final weight and bias, then reports validation loss.
 
+## 📚 Acknowledgement
+Inspired from tutorial: https://github.com/python-engineer/pytorchTutorial
