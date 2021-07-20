@@ -1,3 +1,6 @@
 numpy
 scikit-learn
 argparse
+streamlit
+altair
+pandas
